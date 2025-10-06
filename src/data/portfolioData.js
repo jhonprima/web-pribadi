@@ -35,15 +35,15 @@ export const education = [
     degree: "D3 Teknologi Komputer",
     school: "Institut Teknologi Del",
     location: "Toba, Sumatera Utara",
-    year: "2022 - 2025",
+    year: "2023 - 2026",
     status: "Ongoing",
-    description: "Fokus pada pengembangan software, sistem informasi, dan teknologi web modern. Mempelajari berbagai bahasa pemrograman dan framework untuk membangun aplikasi yang scalable dan efficient.",
+    description: "Fokus pada pengembangan software, AI, sistem informasi, dan teknologi web modern. Mempelajari berbagai bahasa pemrograman dan framework untuk membangun aplikasi yang scalable dan efficient.",
     achievements: [
       "Aktif dalam organisasi mahasiswa",
       "Mengikuti sertifikasi keahlian di bidang software",
       "Proyek akhir dengan nilai akhir A"
     ],
-    image: "/images/itdel-campus.jpg",
+    image: "/images/5.jpg",
     gallery: [
       "/images/1.jpg",
       "/images/2.jpg",
