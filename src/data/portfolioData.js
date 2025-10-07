@@ -64,21 +64,24 @@ export const portfolio = [
     description: "Full-stack web application dengan Wordpress, PHP, dan MySQL untuk UMKM kecil sampai menengah di daerah Kabupaten Toba. UI rensponsif dan kemudahan mengakses fitur-fitur modern .Website ini mampu menampung setiap usaha dan bisnis masyarakat Toba dengan efisien.",
     tech: ["PHP", "CSS", "Wordpress", "MySQL"],
     image: "/images/ecomerce.jpg",
-    link:"https://github.com/jhonprima/ecommerce-dibangun-dengan-wordpress-php-dan-css"
+    link:"https://github.com/jhonprima/ecommerce-dibangun-dengan-wordpress-php-dan-css",
+    demoLink:""
   },
   {
     title: "(CYBERFOX)-Chatbot keamanan cyber yang ramah untuk anak dan remaja",
     description: "WEB-AI dengan Metode RAG,NLP, LLM dan integrasi dengan COHERE_API_KEY yang mendukung vectorEmbedding untuk pencarian dokumen yang lebih cepat.",
     tech: ["Node.js", "Next.js", "React", "PostgreSQL", "Express.Js", "Pinecone", "COHERE_AI"," LangChain", "TypeScript"],
     image: "/images/chatbot.jpg",
-    link:"https://github.com/jhonprima/cyberfox_RAG"
+    link:"https://github.com/jhonprima/cyberfox_RAG",
+    demoLink:"https://chatbot-rag-deploy-fxqe-g4s9pxinv-jhonprimas-projects.vercel.app/login"
   },
   {
     title: "Distributed & Event-Driven E-Commerce Platform with Kafka, MongoDB, and Express",
     description: "Menerapkan sistem e-commerce dengan docker untuk kemudahan integrasi antar laptop dalam menjalankan tugas dan layanan masing-masing. Saling terhubung antara beberapa Device dalam jaringan local dan MongoDB sebagai pusat data",
     tech: ["React", "Docker", "Microservice", "Kafka", "MongoDB","Express.Js"],
     image: "/images/fakestore.png",
-    link:"https://github.com/jhonprima/fake_store_app/tree/main/fakestore-app"
+    link:"https://github.com/jhonprima/fake_store_app/tree/main/fakestore-app",
+    demoLink:""
   }
 ];
 export const achievements = [];

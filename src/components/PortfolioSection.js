@@ -1,5 +1,7 @@
 'use client';
 import { useState } from 'react';
+// Import Image dari Next.js untuk optimasi
+import Image from 'next/image'; 
 import { portfolio } from '../data/portfolioData';
 import { FaFolderOpen, FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
 
@@ -16,7 +18,17 @@ const PortfolioSection = () => {
             <div className="portfolio-card" onClick={() => setSelectedProject(project)}>
               <div className="portfolio-image">
                 {project.image ? (
-                  <img src={project.image} alt={project.title} />
+                  // FIX: Mengganti <img> dengan <Image> untuk performa
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image 
+                      src={project.image} 
+                      alt={project.title} 
+                      fill 
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{ objectFit: 'cover' }}
+                      quality={85}
+                    />
+                  </div>
                 ) : (
                   <div className="portfolio-placeholder">
                     <FaFolderOpen size={64} className="text-green" />
@@ -31,23 +43,42 @@ const PortfolioSection = () => {
                 <p className="portfolio-description">{project.description}</p>
                 <div className="d-flex flex-wrap gap-2 mb-3">
                   {project.tech.map((tech, idx) => (
-                    <span key={idx} className="tech-badge">
+                    // FIX: Menggunakan kombinasi tech+index untuk key yang lebih baik
+                    <span key={`${tech}-${idx}`} className="tech-badge">
                       {tech}
                     </span>
                   ))}
                 </div>
-                {project.link && (
-                  <a 
-                    href={project.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn-github"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <FaGithub size={16} />
-                    <span>View on GitHub</span>
-                  </a>
-                )}
+                
+                {/* --- TOMBOL DI KARTU UTAMA --- */}
+                <div className="portfolio-actions d-flex gap-2">
+                    {project.demoLink && (
+                        <a 
+                          href={project.demoLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="btn-live-demo" // Styling baru untuk Live Demo
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <FaExternalLinkAlt size={16} />
+                          <span>Live Demo</span>
+                        </a>
+                    )}
+                    {project.link && (
+                      <a 
+                        href={project.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="btn-github"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FaGithub size={16} />
+                        <span>View Code</span>
+                      </a>
+                    )}
+                </div>
+                {/* --- AKHIR TOMBOL DI KARTU UTAMA --- */}
+
               </div>
             </div>
           </div>
@@ -64,13 +95,21 @@ const PortfolioSection = () => {
                 className="btn-close-custom"
                 onClick={() => setSelectedProject(null)}
               >
-                ×
+                <FaExternalLinkAlt className="w-4 h-4" />
               </button>
             </div>
             <div className="modal-body">
               {selectedProject.image && (
-                <div className="portfolio-detail-image mb-4">
-                  <img src={selectedProject.image} alt={selectedProject.title} />
+                // FIX: Mengganti <img> dengan <Image> di modal
+                <div className="portfolio-detail-image mb-4" style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
+                    <Image 
+                      src={selectedProject.image} 
+                      alt={selectedProject.title} 
+                      fill 
+                      sizes="100vw"
+                      style={{ objectFit: 'cover' }}
+                      quality={90}
+                    />
                 </div>
               )}
               
@@ -87,17 +126,33 @@ const PortfolioSection = () => {
                 </div>
               </div>
 
-              {selectedProject.link && (
-                <a 
-                  href={selectedProject.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="btn btn-success"
-                >
-                  <FaExternalLinkAlt className="me-2" />
-                  View Project on GitHub
-                </a>
-              )}
+              {/* --- TOMBOL DI MODAL --- */}
+              <div className="d-flex gap-3 mt-4">
+                  {selectedProject.demoLink && (
+                    <a 
+                      href={selectedProject.demoLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn btn-success d-flex align-items-center"
+                    >
+                      <FaExternalLinkAlt className="me-2" />
+                      View Live Demo
+                    </a>
+                  )}
+                  {selectedProject.link && (
+                    <a 
+                      href={selectedProject.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn btn-secondary d-flex align-items-center"
+                    >
+                      <FaGithub className="me-2" />
+                      View Code on GitHub
+                    </a>
+                  )}
+              </div>
+              {/* --- AKHIR TOMBOL DI MODAL --- */}
+
             </div>
           </div>
         </div>
