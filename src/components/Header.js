@@ -5,7 +5,6 @@ import { FaMapMarkerAlt, FaEnvelope, FaGithub, FaUser } from 'react-icons/fa';
 import { profileData } from '../data/portfolioData';
 
 // FIX: 'roles' dipindahkan ke luar komponen agar tidak dibuat ulang pada setiap render.
-// Ini memperbaiki bug di mana useEffect berjalan terus-menerus.
 const roles = [
   "Web Developer",
   "AI Engineer",
@@ -43,7 +42,6 @@ const Header = () => {
     }
 
     return () => clearTimeout(timeout);
-    // FIX: 'roles' dihapus dari dependency array karena sudah stabil (konstan).
   }, [charIndex, isDeleting, currentRole]);
 
   return (
@@ -56,7 +54,6 @@ const Header = () => {
               <span>{profileData.tagline}</span>
             </div>
             
-            {/* FIX: Mengganti ' dengan &apos; untuk mencegah error build */}
             <h1 className="header-name mb-3">
               I&apos;m <span className="text-green">{profileData.name}</span>!
             </h1>
@@ -85,19 +82,19 @@ const Header = () => {
           <div className="col-lg-5">
             <div className="header-photo-display">
               {profileData.aboutPhoto && (
-                // IMPROVEMENT: Mengganti <img> dengan <Image> untuk optimasi
                 <Image
                   src={profileData.aboutPhoto}
                   alt={profileData.name}
-                  width={400} // Tentukan lebar gambar asli
-                  height={400} // Tentukan tinggi gambar asli
-                  quality={95} // Tingkatkan kualitas visual
-                  priority // Prioritaskan loading gambar ini karena penting (di atas halaman)
+                  width={400} 
+                  height={400}
+                  quality={95}
+                  priority
+                  // FIX UTAMA: Hapus inline style yang menyebabkan bentuk lingkaran
+                  // dan ganti height: 'auto' menjadi '100%' untuk mengisi penuh.
                   style={{ 
                     width: '100%', 
-                    height: 'auto', 
-                    borderRadius: '50%',
-                    objectFit: 'cover'
+                    height: '100%', // Mengisi penuh container
+                    objectFit: 'cover' // Memastikan gambar mengisi penuh tanpa space
                   }}
                 />
               )}

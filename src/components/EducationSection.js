@@ -2,42 +2,38 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { education } from '../data/portfolioData';
-import { FaGraduationCap, FaMapMarkerAlt, FaCalendar, FaTrophy, FaUpload, FaTimes, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaGraduationCap, FaMapMarkerAlt, FaCalendar, FaTrophy, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
 
 const EducationSection = () => {
   const [selectedEdu, setSelectedEdu] = useState(null);
   const [eduData, setEduData] = useState(education);
+  // State baru untuk melacak foto mana yang sedang ditampilkan di modal
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const handleAddPhoto = (e, eduId) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEduData(eduData.map(edu => {
-          if (edu.id === eduId) {
-            return {
-              ...edu,
-              gallery: [...(edu.gallery || []), reader.result]
-            };
-          }
-          return edu;
-        }));
-      };
-      reader.readAsDataURL(file);
+  // Fungsi untuk membuka modal dan mereset index gambar
+  const openModal = (edu) => {
+    setSelectedEdu(edu);
+    setCurrentImageIndex(0);
+  };
+
+  // Fungsi untuk navigasi galeri (sama seperti di Portfolio)
+  const navigateGallery = (direction) => {
+    if (!selectedEdu || !selectedEdu.gallery) return;
+
+    const totalImages = selectedEdu.gallery.length;
+    let newIndex = currentImageIndex;
+
+    if (direction === 'next') {
+      newIndex = (currentImageIndex + 1) % totalImages;
+    } else if (direction === 'prev') {
+      newIndex = (currentImageIndex - 1 + totalImages) % totalImages;
     }
+    setCurrentImageIndex(newIndex);
   };
 
-  const handleDeletePhoto = (eduId, photoIndex) => {
-    setEduData(eduData.map(edu => {
-      if (edu.id === eduId) {
-        return {
-          ...edu,
-          gallery: edu.gallery.filter((_, idx) => idx !== photoIndex)
-        };
-      }
-      return edu;
-    }));
-  };
+  // Helper untuk mendapatkan array gambar yang akan ditampilkan di carousel modal
+  const currentGallerySources = selectedEdu?.gallery || [selectedEdu?.image].filter(Boolean);
+  const totalImages = currentGallerySources.length;
 
   return (
     <section className="mb-5">
@@ -64,18 +60,19 @@ const EducationSection = () => {
                 </div>
               </div>
 
+              {/* Tampilan Gambar Utama (Klik untuk membuka modal) */}
               {edu.image && (
-                <div className="education-main-image">
+                <div className="education-main-image" onClick={() => openModal(edu)}>
                   <Image
                     src={edu.image}
                     alt={edu.school}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     style={{ objectFit: 'cover' }}
-                    quality={90} // FIX: Meningkatkan kualitas visual gambar
+                    quality={90}
                   />
                   <div className="image-overlay">
-                    <button className="btn-view-detail" onClick={() => setSelectedEdu(edu)}>
+                    <button className="btn-view-detail">
                       View Details
                     </button>
                   </div>
@@ -96,30 +93,23 @@ const EducationSection = () => {
                   </div>
                 )}
 
+                {/* Bagian Gallery Statis */}
                 <div className="education-gallery-section">
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <h5 className="gallery-title mb-0">Documentation Gallery</h5>
-                    <label className="btn-add-photo">
-                      <input type="file" accept="image/*" onChange={(e) => handleAddPhoto(e, edu.id)} style={{ display: 'none' }} />
-                      <FaPlus size={14} /> <span>Add Photo</span>
-                    </label>
                   </div>
 
                   {edu.gallery && edu.gallery.length > 0 ? (
                     <div className="education-gallery">
                       {edu.gallery.map((photo, idx) => (
-                        <div key={`${photo.substring(15, 25)}-${idx}`} className="gallery-item">
+                        <div key={`${photo.substring(15, 25)}-${idx}`} className="gallery-item" onClick={() => openModal(edu)}>
                           <Image src={photo} alt={`Gallery ${idx + 1}`} fill sizes="100px" style={{ objectFit: 'cover' }} quality={90} />
-                          <button className="btn-delete-photo" onClick={() => handleDeletePhoto(edu.id, idx)}>
-                            <FaTrash size={12} />
-                          </button>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <div className="gallery-empty">
-                      <FaUpload size={32} className="mb-2" />
-                      <p>No photos yet. Click &quot;Add Photo&quot; to upload documentation.</p>
+                      <p>No documentation photos available.</p>
                     </div>
                   )}
                 </div>
@@ -129,7 +119,7 @@ const EducationSection = () => {
         ))}
       </div>
 
-      {/* Detail Modal */}
+      {/* Detail Modal dengan Carousel */}
       {selectedEdu && (
         <div className="custom-modal modal-visible" onClick={() => setSelectedEdu(null)}>
           <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
@@ -141,22 +131,68 @@ const EducationSection = () => {
               <button className="btn-close-custom" onClick={() => setSelectedEdu(null)}><FaTimes /></button>
             </div>
             <div className="modal-body">
-              {selectedEdu.image && (
-                // FIX: Memberi style pada div pembungkus agar layout modal tidak rusak
+              
+              {/* --- CAROUSEL GALERI UTAMA --- */}
+              <div className="education-detail-image mb-4">
                 <div 
-                  className="education-detail-image mb-4"
+                  className="image-carousel-container" 
                   style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9' }}
                 >
-                  <Image 
-                    src={selectedEdu.image} 
-                    alt={selectedEdu.school} 
-                    fill 
-                    sizes="100vw" 
-                    style={{ objectFit: 'cover' }}
-                    quality={90} // FIX: Meningkatkan kualitas visual
-                  />
+                  {/* FIX UTAMA: Map semua gambar dan gunakan opacity/position untuk switching mulus */}
+                  {currentGallerySources.map((src, index) => (
+                    <div 
+                      key={index} 
+                      // Menetapkan posisi absolut dan transisi opacity
+                      style={{ 
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          // FIX: Gunakan opacity untuk hanya menampilkan gambar yang aktif
+                          opacity: index === currentImageIndex ? 1 : 0, 
+                          transition: 'opacity 0.4s ease-in-out',
+                          // Tambahkan z-index agar gambar yang aktif di depan
+                          zIndex: index === currentImageIndex ? 2 : 1,
+                      }}
+                    >
+                      <Image 
+                        src={src} 
+                        alt={`${selectedEdu.school} documentation ${index + 1}`} 
+                        fill 
+                        sizes="100vw"
+                        // FIX: Memastikan object-fit: cover agar gambar mengisi penuh tanpa space
+                        style={{ objectFit: 'cover' }} 
+                        quality={90}
+                      />
+                    </div>
+                  ))}
+
+                  {/* Tombol Navigasi (Hanya muncul jika ada lebih dari 1 gambar) */}
+                  {totalImages > 1 && (
+                    <>
+                      <button 
+                        className="carousel-nav-btn left-0" 
+                        onClick={() => navigateGallery('prev')}
+                      >
+                        <FaChevronLeft size={20} />
+                      </button>
+                      <button 
+                        className="carousel-nav-btn right-0" 
+                        onClick={() => navigateGallery('next')}
+                        style={{ right: '10px' }} 
+                      >
+                        <FaChevronRight size={20} />
+                      </button>
+                      {/* Indikator halaman */}
+                      <div className="carousel-indicator">
+                        {currentImageIndex + 1} / {totalImages}
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
+              {/* --- AKHIR CAROUSEL --- */}
               
               <div className="education-meta mb-4">
                 <span className="meta-item"><FaMapMarkerAlt size={16} /> {selectedEdu.location}</span>
@@ -176,18 +212,31 @@ const EducationSection = () => {
                 </div>
               )}
 
+              {/* Tampilan Thumbnails Galeri (Klik untuk mengganti foto) */}
               {selectedEdu.gallery && selectedEdu.gallery.length > 0 && (
                 <div>
-                  <h5 className="text-green mb-3">Photo Gallery</h5>
+                  <h5 className="text-green mb-3">Photo Gallery Thumbnails</h5>
                   <div className="modal-gallery">
                     {selectedEdu.gallery.map((photo, idx) => (
-                      <div key={`${photo.substring(15, 25)}-${idx}`} className="modal-gallery-item">
-                        <Image src={photo} alt={`Gallery ${idx + 1}`} fill sizes="150px" style={{ objectFit: 'cover' }} quality={90} />
+                      <div 
+                        key={`${photo.substring(15, 25)}-${idx}`} 
+                        className="modal-gallery-item cursor-pointer"
+                        onClick={() => setCurrentImageIndex(idx)} // Klik thumbnail untuk ganti foto
+                      >
+                        <Image 
+                          src={photo} 
+                          alt={`Gallery ${idx + 1}`} 
+                          fill 
+                          sizes="150px" 
+                          style={{ objectFit: 'cover', opacity: idx === currentImageIndex ? 1 : 0.6 }} 
+                          quality={90} 
+                        />
                       </div>
                     ))}
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </div>

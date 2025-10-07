@@ -44,6 +44,7 @@ export const education = [
       "Proyek akhir dengan nilai akhir A"
     ],
     image: "/images/5.jpg",
+    // ARRAY GALERI YANG AKAN DIGUNAKAN OLEH CAROUSEL
     gallery: [
       "/images/1.jpg",
       "/images/2.jpg",
@@ -54,36 +55,69 @@ export const education = [
   }
 ];
 
+
 export const experience = [
 
 ];
 
 export const portfolio = [
   {
+    id: 1, // WAJIB: ID ditambahkan untuk kunci React
     title: "E-Commerce Website UMKM Toba",
     description: "Full-stack web application dengan Wordpress, PHP, dan MySQL untuk UMKM kecil sampai menengah di daerah Kabupaten Toba. UI rensponsif dan kemudahan mengakses fitur-fitur modern .Website ini mampu menampung setiap usaha dan bisnis masyarakat Toba dengan efisien.",
     tech: ["PHP", "CSS", "Wordpress", "MySQL"],
     image: "/images/ecomerce.jpg",
     link:"https://github.com/jhonprima/ecommerce-dibangun-dengan-wordpress-php-dan-css",
-    demoLink:""
+    demoLink:"",
+    // Perbaikan: Memastikan semua path sudah benar
+    gallery: [
+      "/images/ecomerce.jpg", 
+      "/images/10.jpg",
+      "/images/12.jpg",
+      "/images/13.jpg",
+      "/images/14.jpg",
+      "/images/15.jpg",
+      "/images/16.jpg",
+      "/images/17.jpg",
+      "/images/18.jpg",
+      "/images/19.jpg"
+    ]
   },
   {
+    id: 2, // WAJIB: ID ditambahkan
     title: "(CYBERFOX)-Chatbot keamanan cyber yang ramah untuk anak dan remaja",
     description: "WEB-AI dengan Metode RAG,NLP, LLM dan integrasi dengan COHERE_API_KEY yang mendukung vectorEmbedding untuk pencarian dokumen yang lebih cepat.",
     tech: ["Node.js", "Next.js", "React", "PostgreSQL", "Express.Js", "Pinecone", "COHERE_AI"," LangChain", "TypeScript"],
     image: "/images/chatbot.jpg",
     link:"https://github.com/jhonprima/cyberfox_RAG",
-    demoLink:"https://chatbot-rag-deploy-fxqe-g4s9pxinv-jhonprimas-projects.vercel.app/login"
+    demoLink:"https://chatbot-rag-deploy-fxqe-g4s9pxinv-jhonprimas-projects.vercel.app/login",
+    // Galeri untuk Proyek 2
+    gallery: [
+      "/images/chatbot.jpg",
+      "/images/8.png",
+      "/images/9.png",
+      "/images/10.png",
+      "/images/11.png"
+    ]
   },
   {
+    id: 3, // WAJIB: ID ditambahkan
     title: "Distributed & Event-Driven E-Commerce Platform with Kafka, MongoDB, and Express",
     description: "Menerapkan sistem e-commerce dengan docker untuk kemudahan integrasi antar laptop dalam menjalankan tugas dan layanan masing-masing. Saling terhubung antara beberapa Device dalam jaringan local dan MongoDB sebagai pusat data",
     tech: ["React", "Docker", "Microservice", "Kafka", "MongoDB","Express.Js"],
     image: "/images/fakestore.png",
     link:"https://github.com/jhonprima/fake_store_app/tree/main/fakestore-app",
-    demoLink:""
+    demoLink:"",
+    // Galeri untuk Proyek 3
+    gallery: [
+      "/images/fakestore.png",
+      // FIX: Mengganti nama file menjadi yang lebih aman dari 404
+      "/images/fakestore_detail.png" 
+    ]
   }
 ];
+
+
 export const achievements = [];
 
 export const contactData = {

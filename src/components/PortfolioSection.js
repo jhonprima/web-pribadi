@@ -1,12 +1,31 @@
 'use client';
 import { useState } from 'react';
-// Import Image dari Next.js untuk optimasi
-import Image from 'next/image'; 
+import Image from 'next/image';
 import { portfolio } from '../data/portfolioData';
-import { FaFolderOpen, FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
+import { FaFolderOpen, FaExternalLinkAlt, FaGithub, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
 
 const PortfolioSection = () => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const openModal = (project) => {
+    setSelectedProject(project);
+    setCurrentImageIndex(0);
+  };
+
+  const navigateGallery = (direction) => {
+    if (!selectedProject || !selectedProject.gallery) return;
+
+    const totalImages = selectedProject.gallery.length;
+    let newIndex = currentImageIndex;
+
+    if (direction === 'next') {
+      newIndex = (currentImageIndex + 1) % totalImages;
+    } else if (direction === 'prev') {
+      newIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+    }
+    setCurrentImageIndex(newIndex);
+  };
 
   return (
     <section className="mb-5">
@@ -15,10 +34,9 @@ const PortfolioSection = () => {
       <div className="row g-4">
         {portfolio.map((project, index) => (
           <div key={index} className="col-md-6 col-lg-4">
-            <div className="portfolio-card" onClick={() => setSelectedProject(project)}>
+            <div className="portfolio-card" onClick={() => openModal(project)}> 
               <div className="portfolio-image">
                 {project.image ? (
-                  // FIX: Mengganti <img> dengan <Image> untuk performa
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     <Image 
                       src={project.image} 
@@ -43,21 +61,19 @@ const PortfolioSection = () => {
                 <p className="portfolio-description">{project.description}</p>
                 <div className="d-flex flex-wrap gap-2 mb-3">
                   {project.tech.map((tech, idx) => (
-                    // FIX: Menggunakan kombinasi tech+index untuk key yang lebih baik
                     <span key={`${tech}-${idx}`} className="tech-badge">
                       {tech}
                     </span>
                   ))}
                 </div>
                 
-                {/* --- TOMBOL DI KARTU UTAMA --- */}
-                <div className="portfolio-actions d-flex gap-2">
+                <div className="portfolio-actions d-flex gap-2 mt-auto"> 
                     {project.demoLink && (
                         <a 
                           href={project.demoLink} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="btn-live-demo" // Styling baru untuk Live Demo
+                          className="btn-live-demo flex-grow-1 d-flex justify-content-center align-items-center"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <FaExternalLinkAlt size={16} />
@@ -69,7 +85,7 @@ const PortfolioSection = () => {
                         href={project.link} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="btn-github"
+                        className="btn-github flex-grow-1 d-flex justify-content-center align-items-center"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <FaGithub size={16} />
@@ -77,8 +93,6 @@ const PortfolioSection = () => {
                       </a>
                     )}
                 </div>
-                {/* --- AKHIR TOMBOL DI KARTU UTAMA --- */}
-
               </div>
             </div>
           </div>
@@ -95,23 +109,46 @@ const PortfolioSection = () => {
                 className="btn-close-custom"
                 onClick={() => setSelectedProject(null)}
               >
-                <FaExternalLinkAlt className="w-4 h-4" />
+                <FaTimes size={18} />
               </button>
             </div>
             <div className="modal-body">
-              {selectedProject.image && (
-                // FIX: Mengganti <img> dengan <Image> di modal
-                <div className="portfolio-detail-image mb-4" style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
-                    <Image 
-                      src={selectedProject.image} 
-                      alt={selectedProject.title} 
-                      fill 
-                      sizes="100vw"
-                      style={{ objectFit: 'cover' }}
-                      quality={90}
-                    />
+              
+              <div className="portfolio-detail-image mb-4">
+                <div 
+                  className="image-carousel-container" 
+                  style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}
+                >
+                  <Image 
+                    src={selectedProject.gallery?.[currentImageIndex] || selectedProject.image} 
+                    alt={selectedProject.title} 
+                    fill 
+                    sizes="100vw"
+                    style={{ objectFit: 'cover' }}
+                    quality={90}
+                  />
+
+                  {selectedProject.gallery && selectedProject.gallery.length > 1 && (
+                    <>
+                      <button 
+                        className="carousel-nav-btn left-0" 
+                        onClick={() => navigateGallery('prev')}
+                      >
+                        <FaChevronLeft size={20} />
+                      </button>
+                      <button 
+                        className="carousel-nav-btn right-0" 
+                        onClick={() => navigateGallery('next')}
+                      >
+                        <FaChevronRight size={20} />
+                      </button>
+                      <div className="carousel-indicator">
+                        {currentImageIndex + 1} / {selectedProject.gallery.length}
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
               
               <p className="text-muted mb-4">{selectedProject.description}</p>
               
@@ -126,14 +163,13 @@ const PortfolioSection = () => {
                 </div>
               </div>
 
-              {/* --- TOMBOL DI MODAL --- */}
               <div className="d-flex gap-3 mt-4">
                   {selectedProject.demoLink && (
                     <a 
                       href={selectedProject.demoLink} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="btn btn-success d-flex align-items-center"
+                      className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center"
                     >
                       <FaExternalLinkAlt className="me-2" />
                       View Live Demo
@@ -144,15 +180,13 @@ const PortfolioSection = () => {
                       href={selectedProject.link} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="btn btn-secondary d-flex align-items-center"
+                      className="btn btn-secondary flex-grow-1 d-flex align-items-center justify-content-center"
                     >
                       <FaGithub className="me-2" />
                       View Code on GitHub
                     </a>
                   )}
               </div>
-              {/* --- AKHIR TOMBOL DI MODAL --- */}
-
             </div>
           </div>
         </div>
