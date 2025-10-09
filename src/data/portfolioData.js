@@ -120,14 +120,17 @@ export const portfolio = [
     title: "AIbat | Sahabat Pencari Obat |",
     description: "Dibangun menggunakan Model COHERE_A dan Model Embedding multi-qa-mpnet-base-dot-v1, memastikan para pengguna menemukan obat yang tepat jika sedang dalam keadaaan sakit. Di design dengan RAG dan Langchain, untuk pencarian vector dan dokumen yang cepat",
     tech: ["Python", "RAG", "LangChain", "CSS", "Streamlit"], // PERBAIKAN KRITIS: Menjadi array yang valid
-    image: "/images/fakestore.png",
+    image: "/images/ai4.png",
     link:"https://github.com/jhonprima/fake_store_app/tree/main/fakestore-app",
-    demoLink:"",
+    demoLink:"https://aibat-rag-pbn77vxhot6ajcrm7hnkhn.streamlit.app/",
     // Galeri untuk Proyek 4
     gallery: [
-      "/images/fakestore.png",
-      // FIX: Mengganti nama file menjadi yang lebih aman dari 404
-      "/images/fakestore_detail.png" 
+     
+      "/images/fakestore_detail.png",
+      "/images/ai2.jpg",
+      "/images/ai1.jpg",
+      "/images/ai3.jpg",
+      "/images/ai4.png"
     ]
   }
 ];
