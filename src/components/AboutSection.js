@@ -8,14 +8,15 @@ import {
 
 const AboutSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const paragraphs = aboutData.description.split('\n').filter(p => p.trim());
+  // Memastikan deskripsi aman dari null/undefined
+  const paragraphs = aboutData?.description 
+    ? aboutData.description.split('\n').filter(p => p.trim()) 
+    : [];
 
-  // Trigger animasi saat komponen dimuat
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  // Data Kontak Teks (Sisi Kiri)
   const contactDetails = [
     {
       icon: <FaMapMarkerAlt />,
@@ -37,7 +38,6 @@ const AboutSection = () => {
     }
   ];
 
-  // Data Social Media (Sisi Kanan - Tombol Bulat)
   const socialButtons = [
     { icon: <FaLinkedin />, url: 'https://www.linkedin.com/in/jhon-prima-panjaitan-650654369/', color: '#0077b5' },
     { icon: <FaWhatsapp />, url: 'https://wa.me/6288976716840', color: '#25D366' },
@@ -47,7 +47,6 @@ const AboutSection = () => {
 
   return (
     <section className="mb-5" id="about">
-      {/* --- CSS UNTUK ANIMASI --- */}
       <style jsx>{`
         .anim-element {
           opacity: 0;
@@ -74,17 +73,15 @@ const AboutSection = () => {
       
       <div className="row g-5">
         
-        {/* --- KOLOM KIRI: PROFILE CARD (Foto & Info Detail) --- */}
+        {/* KOLOM KIRI */}
         <div className={`col-lg-4 anim-element ${isVisible ? 'anim-active' : ''}`} style={{ transitionDelay: '0.2s' }}>
           <div className="h-100 p-4 rounded-4 bg-dark border border-secondary border-opacity-50 hover-card position-relative overflow-hidden"
                style={{ transition: 'transform 0.3s ease' }}>
              
-             {/* Background Decoration */}
              <div className="position-absolute top-0 start-50 translate-middle bg-success opacity-10 rounded-circle" 
                   style={{ width: '200px', height: '200px', filter: 'blur(60px)' }}></div>
 
              <div className="position-relative text-center">
-                {/* FOTO PROFIL */}
                 <div className="d-inline-block p-1 rounded-circle mb-3" 
                      style={{ background: 'linear-gradient(45deg, #2ecc71, #3498db)' }}>
                   <img 
@@ -102,7 +99,6 @@ const AboutSection = () => {
 
                 <hr className="border-secondary opacity-25 my-4" />
 
-                {/* DETAIL INFO LIST (Lokasi, Email, GitHub) */}
                 <div className="text-start d-flex flex-column gap-3">
                   {contactDetails.map((item, idx) => (
                     <div key={idx} className="d-flex align-items-center gap-3 p-2 rounded hover-bg-light">
@@ -133,7 +129,7 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* --- KOLOM KANAN: BIO & SOCIAL BUTTONS --- */}
+        {/* KOLOM KANAN */}
         <div className={`col-lg-8 anim-element ${isVisible ? 'anim-active' : ''}`} style={{ transitionDelay: '0.4s' }}>
           <div className="h-100 p-4 p-md-5 rounded-4 bg-dark border border-secondary border-opacity-25 position-relative shadow-lg">
              <FaQuoteLeft className="position-absolute text-success opacity-10" 
@@ -141,7 +137,8 @@ const AboutSection = () => {
              
              <div className="position-relative" style={{ zIndex: 1 }}>
                 <h3 className="text-white fw-bold mb-4">
-                  Hello, I'm <span className="text-success">Jhon Prima</span>
+                  {/* PERBAIKAN: Menggunakan &apos; untuk tanda kutip */}
+                  Hello, I&apos;m <span className="text-success">Jhon Prima</span>
                 </h3>
 
                 <div className="text-light" style={{ lineHeight: '1.8', opacity: 0.9 }}>
@@ -150,7 +147,6 @@ const AboutSection = () => {
                   ))}
                 </div>
 
-                {/* SOCIAL MEDIA BUTTONS */}
                 <div className="mt-5 pt-4 border-top border-secondary border-opacity-25">
                   <p className="text-muted small fw-bold mb-3 text-uppercase">Connect with me</p>
                   <div className="d-flex flex-wrap gap-3">
